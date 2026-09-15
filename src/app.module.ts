@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { createObserveModule } from '@nestjs/observe';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { PersonaModule } from './modules/persona/persona.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -17,14 +18,18 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
       username: process.env.DB_USER,
       password: process.env.DB_PASWORD,
       entities: [import.meta.dirname + '/**/*.entity{.ts,.js}'],
+      autoLoadEntities: true,
       logging: true
     }),
     
+    /*
     ObserveModule.forRoot({
       appKey: 'YOUR_APP_KEY',
       appSecret: 'YOUR_APP_SECRET',
       serviceId: 'api-cine',
     }),
+    */
+    PersonaModule,
   ],
   controllers: [],
   providers: [],
