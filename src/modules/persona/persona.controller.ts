@@ -12,4 +12,9 @@ export class PersonaController {
   async obtenerpersonas():Promise<Persona[]>{
     return this.personaService.obtenerPersonas();
   }
+
+  @Get(':id')
+  async obtenerPersonaId(@Param('id') id:number){
+    return this.personaService.obtenerPersonaId(id);
+  }
 }

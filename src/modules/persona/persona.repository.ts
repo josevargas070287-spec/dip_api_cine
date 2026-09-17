@@ -11,6 +11,12 @@ export class PersonaRepository{
     ){}
 
     async obtenerPersona():Promise<Persona[]>{
-        return this.personaRepository.find();
+        return this.personaRepository.createQueryBuilder('pp')
+        //.orderBy('pp.idPersona', 'DESC')
+        .getMany();
+    }
+
+    async obtenerPersonaId(id:number):Promise<Persona | null>{
+        return this.personaRepository.findOne({where:{idPersona:id}});
     }
 }
