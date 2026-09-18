@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { createObserveModule } from '@nestjs/observe';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PersonaModule } from './modules/persona/persona.module.js';
+import { ReservasModule } from './modules/reservas/reservas.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -30,6 +31,8 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     }),
     */
     PersonaModule,
+    
+    ReservasModule,
   ],
   controllers: [],
   providers: [],

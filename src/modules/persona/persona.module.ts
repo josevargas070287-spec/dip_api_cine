@@ -4,10 +4,14 @@ import { PersonaController } from './persona.controller.js';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Persona } from './entities/persona.entity.js';
 import { PersonaRepository } from './persona.repository.js';
+import { Rol } from './entities/rol.entity.js';
+import { RolUsuario } from './entities/rol-usuario.entity.js';
+import { Usuario } from './entities/usaurio.entity.js';
+import { Cliente } from './entities/cliente.entity.js';
 
 @Module({
   imports:[
-    TypeOrmModule.forFeature([Persona])
+    TypeOrmModule.forFeature([Persona,Rol,RolUsuario,Usuario,Cliente])
   ],
 
   controllers: [PersonaController],

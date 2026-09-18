@@ -13,7 +13,7 @@ export class Persona {
     apellidos!:String;
 
     @Column({name:'documento'})
-    docuemnto!:String;
+    documento!:String;
 
     @Column({name:'telefono'})
     telefono!:String;

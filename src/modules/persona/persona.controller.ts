@@ -10,11 +10,16 @@ export class PersonaController {
 
   @Get()
   async obtenerpersonas():Promise<Persona[]>{
-    return this.personaService.obtenerPersonas();
+    return await this.personaService.obtenerPersonas();
   }
 
   @Get(':id')
-  async obtenerPersonaId(@Param('id') id:number){
-    return this.personaService.obtenerPersonaId(id);
+  async obtenerPersonaId(@Param('id') id:number):Promise<Persona>{
+    return await this.personaService.obtenerPersonaId(id);
+  }
+
+  @Post()
+  async crearPersona(@Body() dataDto:CreatePersonaDto):Promise<Partial<Persona>>{
+    return await this.personaService.crearPersona(dataDto);
   }
 }
