@@ -1,4 +1,4 @@
-import { IsBoolean, IsDateString, IsNumber, IsString } from "class-validator";
+import { IsBoolean, IsDateString, IsNumber, IsString, Min } from "class-validator";
 
 export class CrearPeliculaDto{
 
@@ -9,6 +9,7 @@ export class CrearPeliculaDto{
     sinopsis!: string;
     
     @IsNumber()
+    @Min(1)
     duracion!: number;
     
     @IsDateString()
