@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PersonaModule } from './modules/persona/persona.module.js';
 import { ReservasModule } from './modules/reservas/reservas.module.js';
 
+
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
 @Module({

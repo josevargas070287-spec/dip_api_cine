@@ -1,5 +1,6 @@
-import { IsString } from "class-validator";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Usuario } from "./usuario.entity.js";
+import { Cliente } from "./cliente.entity.js";
 
 @Entity({schema:'identidad',name:'persona'})
 export class Persona {
@@ -23,5 +24,25 @@ export class Persona {
 
     @Column({name:'fecha_nacimiento'})
     fechaNacimiento!:Date;
+
+    @BeforeInsert()
+    @BeforeUpdate()
+    checkSlugInsert(){
+        this.nombres = this.nombres.toUpperCase();
+        this.apellidos = this.apellidos.toUpperCase();
+        
+    }
+
+    @OneToOne(
+        ()=> Usuario,
+        (usuario:Usuario) => usuario.persona
+    )
+    usuario:Usuario;
+
+    @OneToOne(
+        ()=>Cliente,
+        (cliente:Cliente) => cliente.persona
+    )
+    cliente!:Cliente;
 
 }

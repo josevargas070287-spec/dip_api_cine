@@ -1,10 +1,40 @@
-import { Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
-Entity({schema:'ventas', name:'detalle_reserva'})
-export class DetalleReserva{
+import { Reserva } from './reserva.entity.js';
+import { Asiento } from './asiento.entity.js';
 
-    @PrimaryGeneratedColumn({name:'id_detalle_reserva'})
-    idDetalleReserva!:number;
+@Entity({ schema: 'ventas', name: 'detalle_reserva' })
+export class DetalleReserva {
 
+  @PrimaryGeneratedColumn({ name: 'id_detalle_persona' })
+  id!: number;
 
+  @Column({ name: 'id_reserva' })
+  idReserva!: number;
+
+  @Column({ name: 'id_asiento' })
+  idAsiento!: number;
+
+  @Column({ name: 'precio' })
+  precio!: number;
+
+  @ManyToOne(
+    () =>Reserva,
+    (reserva: Reserva) => reserva.detalleReserva
+  )
+  @JoinColumn({ name: 'id_reserva' })
+  reserva!: Reserva[];
+
+  @ManyToOne(
+    ()=> Asiento,
+    (asiento: Asiento) => asiento.detalleReserva
+  )
+  @JoinColumn({ name: 'id_asiento' })
+  asiento!: Asiento;
 }

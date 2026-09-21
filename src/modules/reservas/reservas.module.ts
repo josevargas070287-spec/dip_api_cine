@@ -5,12 +5,19 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Reserva } from './entities/reserva.entity.js';
 import { Asiento } from './entities/asiento.entity.js';
 import { DetalleReserva } from './entities/detalle-reserva.entity.js';
+import { Sala } from './entities/sala.entity.js';
+import { Funcion } from './entities/funcion.entity.js';
+import { Pelicula } from './entities/pelicula.entity.js';
+import { PeliculaServices } from './pelicula.service.js';
+import { PeliculaController} from './pelicula.controller.js';
+import { PeliculaRepository } from './pelicula.repository.js';
+import { reservasRepository } from './reservas.repository.js';
 
 @Module({
   imports:[
-    TypeOrmModule.forFeature([Reserva,Asiento,DetalleReserva])
+    TypeOrmModule.forFeature([Reserva,Asiento,DetalleReserva,Sala,Funcion,Pelicula])
   ],
-  controllers: [ReservasController],
-  providers: [ReservasService],
+  controllers: [ReservasController, PeliculaController],
+  providers: [ReservasService, PeliculaServices,PeliculaRepository,reservasRepository]
 })
 export class ReservasModule {}

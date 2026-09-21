@@ -51,13 +51,13 @@ export class PersonaService {
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
-      const personaResultado = await this.personaRepository.crearpersona(dataDto, queryRunner);
+      const personaResultado = await this.personaRepository.modificarpersona(id, dataDto, queryRunner);
       await queryRunner.commitTransaction();
       //return personaResultado;//devuelve todo el json
       return {
-        nombres : personaResultado.nombres,
-        apellidos: personaResultado.apellidos,
-        telefono: personaResultado.telefono
+        nombres : personaResultado!.nombres,
+        apellidos: personaResultado!.apellidos,
+        telefono: personaResultado!.telefono
       };
     } catch (error) {
       await queryRunner.rollbackTransaction();
