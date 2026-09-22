@@ -1,5 +1,11 @@
-import { IsBoolean, IsDateString, IsNumber, IsString, Min } from "class-validator";
-
+import { Type, Transform } from 'class-transformer';
+import {
+  IsBoolean,
+  IsDateString,
+  IsNumber,
+  IsString,
+  Min,
+} from 'class-validator';
 export class CrearPeliculaDto{
 
     @IsString({message:'El titulo de la pelicula es obligatorio'})

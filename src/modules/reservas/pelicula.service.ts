@@ -3,6 +3,8 @@ import { PeliculaRepository } from './pelicula.repository.js';
 import { Pelicula } from './entities/pelicula.entity.js';
 import { CrearPeliculaDto } from './dto-reservas/crear-pelicula.dto.js';
 import { DataSource } from 'typeorm';
+import { PaginacionParamsDto } from '../../common/dto/PaginacionParams.dto.js';
+import { PaginationResult } from '../../common/interfaces/PaginationResult.type.js';
 
 @Injectable()
 export class PeliculaServices{
@@ -11,8 +13,8 @@ export class PeliculaServices{
         private readonly datasourcePelicula: DataSource
     ){}
 
-    async obtenerPelicula():Promise<Pelicula[]>{
-        const pelicula = await this.peliculaRepository.obtenerPelicula();
+    async obtenerPelicula(dtoPelicula:PaginacionParamsDto):Promise<PaginationResult<Pelicula>>{
+        const pelicula = await this.peliculaRepository.obtenerPelicula(dtoPelicula);
         return pelicula;
     }
 
@@ -22,7 +24,7 @@ export class PeliculaServices{
             throw new NotFoundException("No existe Pelicula buscada");
         return peliculaobtenida;
     }
-
+    
     async crearPelicula(dataPeliculaDto:CrearPeliculaDto):Promise<Partial<Pelicula>>{
         const queryRunnerPelicula = this.datasourcePelicula.createQueryRunner();
         await queryRunnerPelicula.connect();

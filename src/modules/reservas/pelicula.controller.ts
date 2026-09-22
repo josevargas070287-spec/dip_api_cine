@@ -1,8 +1,13 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { PeliculaServices } from './pelicula.service.js';
 import { Pelicula } from './entities/pelicula.entity.js';
 import { identity } from 'rxjs';
 import { CrearPeliculaDto } from './dto-reservas/crear-pelicula.dto.js';
+import { HandleException } from '../../common/decorators/handleException.decorator.js';
+import { SuccessResponse } from '../../common/interfaces/CustomResponse.interface.js';
+import { ResponseUtils } from '../../common/utils/Response.utils.js';
+import { PaginacionParamsDto } from '../../common/dto/PaginacionParams.dto.js';
+import { PaginationResult } from '../../common/interfaces/PaginationResult.type.js';
 
 @Controller('pelicula')
 export class PeliculaController {
@@ -12,8 +17,15 @@ export class PeliculaController {
     ){}
 
     @Get()
-    async obtenerpelicula():Promise<Pelicula[]>{
-        return await this.peliculaService.obtenerPelicula();
+    async obtenerpelicula(@Query() dtoPelicula:PaginacionParamsDto):Promise<PaginationResult<Pelicula>>{
+        const peliculas = await this.peliculaService.obtenerPelicula(dtoPelicula);
+        return ResponseUtils.paginated(
+            peliculas.data,
+            peliculas.total,
+            dtoPelicula.pagina,
+            dtoPelicula.porPagina,
+            'Listado de peliculas'
+        );
     }
 
     @Get(':idpelicula')
@@ -22,16 +34,19 @@ export class PeliculaController {
     }
 
     @Post()
+    @HandleException('Error al registrar a la pelicula')
     async crearPelicula(
         @Body() dataPeliculaDto: CrearPeliculaDto,
-    ):Promise<Partial<Pelicula>>{
+    ):Promise<SuccessResponse<Partial<Pelicula>>>{
         const guaradarPelicula= await this.peliculaService.crearPelicula(dataPeliculaDto);
-        return guaradarPelicula;
+        return ResponseUtils.success(guaradarPelicula,'Pelicula registrada correctamente');
     }
 
     @Patch(':idpeli')
+    @HandleException('Error al registrar a la pelicula')
     async modificarPelicula(@Param('idpeli') id:number,@Body() dataPeliculaDto:CrearPeliculaDto){
-        return await this.peliculaService.modificarPelicula(id,dataPeliculaDto);
+        const modificarPelicula = await this.peliculaService.modificarPelicula(id,dataPeliculaDto);
+        return ResponseUtils.success(modificarPelicula,'Se modifico correctamente');
     }
 
 }

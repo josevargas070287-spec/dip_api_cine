@@ -23,6 +23,12 @@ export class Pelicula {
     @Column({name:'activo'})
     activo!: boolean;
 
+    @Column({
+    name: 'imagen',
+    nullable: true,
+    })
+    imagen!: string;
+
     @BeforeInsert()
     @BeforeUpdate()
     checkSlugInsert(){

@@ -21,11 +21,11 @@ export class reservasRepository{
             );
         }
          
-        async obtenerReservaId(id:number):Promise<Reserva | null>{
+    async obtenerReservaId(id:number):Promise<Reserva | null>{
             return await this.reservasRepository.findOne({where:{id:id}});
         }
     
-        async crearReserva(
+    async crearReserva(
             dataReserva: Partial<Reserva>, 
             queryRunner:QueryRunner
         ):Promise<Reserva>{

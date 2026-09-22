@@ -12,12 +12,17 @@ import { PeliculaServices } from './pelicula.service.js';
 import { PeliculaController} from './pelicula.controller.js';
 import { PeliculaRepository } from './pelicula.repository.js';
 import { reservasRepository } from './reservas.repository.js';
+import { FuncionController } from './funcion.controller.js';
+import { FuncionRepository } from './funcion.repository.js';
+import { FuncionServices } from './funcion.service.js';
 
 @Module({
   imports:[
     TypeOrmModule.forFeature([Reserva,Asiento,DetalleReserva,Sala,Funcion,Pelicula])
   ],
-  controllers: [ReservasController, PeliculaController],
-  providers: [ReservasService, PeliculaServices,PeliculaRepository,reservasRepository]
+  controllers: [ReservasController, PeliculaController,FuncionController],
+  providers: [ReservasService, PeliculaServices,PeliculaRepository,reservasRepository,
+              FuncionRepository, FuncionServices
+              ]
 })
 export class ReservasModule {}

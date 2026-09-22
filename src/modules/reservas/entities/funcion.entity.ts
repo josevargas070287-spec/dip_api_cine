@@ -19,11 +19,11 @@ export class Funcion {
     @Column({name:'fecha'})
     fecha!: Date;
 
-    @Column({name:'hora_inicio'})
-    horaInicio!: Date;
+    @Column({name:'hora_inicio' ,type: 'time'})
+    horaInicio!: String;
 
-    @Column({name:'hora_fin'})
-    horaFin!: Date;
+    @Column({name:'hora_fin',type: 'time'})
+    horaFin!: String;
 
     @Column({name:'precio'})
     precio!: number;

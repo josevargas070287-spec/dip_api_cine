@@ -4,13 +4,25 @@ import { createObserveModule } from '@nestjs/observe';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PersonaModule } from './modules/persona/persona.module.js';
 import { ReservasModule } from './modules/reservas/reservas.module.js';
+import { seconds, ThrottlerGuard, ThrottlerModule} from '@nestjs/throttler'
+import { APP_GUARD } from '@nestjs/core';
 
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
 @Module({
   imports: [
-
+    ThrottlerModule.forRoot(
+      {
+        throttlers:[
+          {
+            ttl: seconds(10),
+            limit:5
+          }
+        ],
+        errorMessage:'Demasiadas solicitudes vuela a conectarse'
+      }
+    ),
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -36,7 +48,12 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     ReservasModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard
+    }
+  ],
 })
 export class AppModule {
 

@@ -1,72 +1,48 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Query } from '@nestjs/common';
 import { PersonaService } from './persona.service.js';
 import { CreatePersonaDto } from './dto/create-persona.dto.js';
-import { UpdatePersonaDto } from './dto/update-persona.dto.js';
 import { Persona } from './entities/persona.entity.js';
 import type { Response } from 'express';
+import { HandleException } from '../../common/decorators/handleException.decorator.js';
+import { PaginatedResponse, SuccessResponse } from '../../common/interfaces/CustomResponse.interface.js';
+import { ResponseUtils } from '../../common/utils/Response.utils.js';
+import { PaginacionParamsDto } from '../../common/dto/PaginacionParams.dto.js';
 
 @Controller('persona')
 export class PersonaController {
   constructor(private readonly personaService: PersonaService) {}
 
   @Get()
-  @HttpCode(HttpStatus.ACCEPTED)
-  async obtenerpersonas(
-    @Res() response: Response
-  ):Promise<Response>{
-    const persona = await this.personaService.obtenerPersonas();
-    return response
-    .status(HttpStatus.ACCEPTED)
-    .header('Content-Type','application/json')
-    .json({
-      success: true,
-      statusCode: HttpStatus.ACCEPTED,
-      message: 'Lista de personas obtenidas',
-      data: persona,
-      timetamp: new Date().toISOString()
-    })
+  @HandleException('Error al cargar la lista de personas')
+  async obtenerpersonas(@Query() dto:PaginacionParamsDto):Promise<PaginatedResponse<Persona>>{
+    const personas = await this.personaService.obtenerPersonas(dto);
+    return ResponseUtils.paginated(
+      personas.data,
+      personas.total,
+      dto.pagina,
+      dto.porPagina,
+      'Listado de personas'
+    );
   }
 
   @Get(':id')
+  @HandleException('Error al buscar persona')
   async obtenerPersonaId(@Param('id') id:number):Promise<Persona>{
     return await this.personaService.obtenerPersonaId(id);
   }
 
   @Post()
-  @HttpCode(HttpStatus.ACCEPTED)
-  async crearPersona(
-      @Body() dataDto:CreatePersonaDto,
-      @Res() response: Response
-    ):Promise<Response>{
-    try {
+  @HandleException('Error al registrar a la persona')
+  async crearPersona(@Body() dataDto:CreatePersonaDto):Promise<SuccessResponse<Partial<Persona>>>{
       const persona = await this.personaService.crearPersona(dataDto);
-      return response 
-      .status(HttpStatus.ACCEPTED)
-      .header('Content-Type','application/json')
-      .json({
-        success: true,
-        statusCode: HttpStatus.ACCEPTED,
-        message: 'Se Guardo la persona correctamente',
-        data: persona,
-        timetamp: new Date().toISOString()
-      })
-    } catch (error) {
-      return response 
-      .status(HttpStatus.INTERNAL_SERVER_ERROR)
-      .header('Content-Type','application/json')
-      .json({
-        success: true,
-        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-        message: 'Ocurrio un Problema al guardar los datos',
-        data: null,
-        timetamp: new Date().toISOString()
-      })
-    }
-    
+      return ResponseUtils.success(persona,'Persona registrada correctamente');
   }
 
   @Patch(':id')
+  @HandleException('Error al modificar la persona')
   async modificarPersona(@Param('id') id:number, @Body() dataDto: CreatePersonaDto){
-    return await this.personaService.ModificarPersona(id,dataDto);
+    const persona = await this.personaService.ModificarPersona(id, dataDto);
+      return ResponseUtils.success(persona,'Persona modifica correctamente');
   }
+
 }

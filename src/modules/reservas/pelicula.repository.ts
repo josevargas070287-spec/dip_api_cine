@@ -3,6 +3,8 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Pelicula } from "./entities/pelicula.entity.js";
 import { QueryRunner } from "typeorm/browser";
+import { PaginacionParamsDto } from "../../common/dto/PaginacionParams.dto.js";
+import { PaginationResult } from "../../common/interfaces/PaginationResult.type.js";
 
 @Injectable()
 export class PeliculaRepository {
@@ -11,7 +13,18 @@ export class PeliculaRepository {
         private readonly peliculaRepository: Repository<Pelicula>
     ){}
 
-    async obtenerPelicula():Promise<Pelicula[]>{
+    async obtenerPelicula(dtoPelicula:PaginacionParamsDto):Promise<PaginationResult<Pelicula>>{
+        const [peliculas, total] = await this.peliculaRepository.findAndCount({
+            skip: (dtoPelicula.pagina -1) * dtoPelicula.porPagina,
+            take: dtoPelicula.porPagina,
+            order:{
+                idPelicula:'ASC'
+            }
+        });
+    return {data:peliculas,total}
+    }
+    
+    /*async obtenerPelicula():Promise<Pelicula[]>{
         return await this.peliculaRepository.find(
             {
                 order:{
@@ -19,7 +32,7 @@ export class PeliculaRepository {
                 }
             }
         )
-    }
+    }*/
 
     async obtenerPeliculaId(idpeli:number):Promise<Pelicula | null>{
         const pelicula = await this.peliculaRepository.findOne({where:{idPelicula:idpeli}})
